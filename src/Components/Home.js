@@ -28,5 +28,5 @@ const Feed = styled.div`
   position: relative;
   left: 60px;
   top: 60px;
-  z-index: -1;
+  z-index: 0;
 `;
