@@ -5,16 +5,19 @@ function FeedLeft() {
   const [persClick, setPerseClick] = useState(false);
   const [profClick, setProfClick] = useState(false);
   const [entClick, setEntClick] = useState(true);
+  const [socialClick, setSocialClick] = useState(false);
 
   const onItemClick = (item) => {
     document.querySelector(`.${item}-next`).classList.toggle("active");
     if (document.querySelector(`.${item}-next`).classList.contains("active")) {
-      if (item == "pers") setPerseClick(true);
-      if (item == "prof") setProfClick(true);
+      if (item === "pers") setPerseClick(true);
+      if (item === "prof") setProfClick(true);
+      if (item === "social") setSocialClick(true);
       document.querySelector(`.${item}-heading`).style.marginBottom = "10px";
     } else {
-      if (item == "pers") setPerseClick(false);
-      if (item == "prof") setProfClick(false);
+      if (item === "pers") setPerseClick(false);
+      if (item === "prof") setProfClick(false);
+      if (item === "social") setSocialClick(false);
       document.querySelector(`.${item}-heading`).style.marginBottom = "0px";
     }
   };
@@ -149,6 +152,53 @@ function FeedLeft() {
           ""
         )}
       </Entertainment>
+      <Social>
+        <div className="heading social-heading" onClick={() => onItemClick("social")}>
+          social
+          <img className="social social-next" src="/images/next.png" alt="social-next" />
+        </div>
+        {socialClick ? (
+          <>
+            <div className="items">
+              <img src="/images/events.png" alt="events" />
+              <div className="text-content">
+                <div className="name">Events</div>
+                <div className="desc">Organize or find events and other things to do online and nearby</div>
+              </div>
+            </div>
+            <div className="items">
+              <img src="/images/friends-clr.png" alt="events" />
+              <div className="text-content">
+                <div className="name">Friends</div>
+                <div className="desc">Search for or people may know</div>
+              </div>
+            </div>
+            <div className="items">
+              <img src="/images/groups-clr.png" alt="events" />
+              <div className="text-content">
+                <div className="name">Groups</div>
+                <div className="desc">Connect with people who share your interests</div>
+              </div>
+            </div>
+            <div className="items">
+              <img src="/images/newsfeed.png" alt="events" />
+              <div className="text-content">
+                <div className="name">News Feed </div>
+                <div className="desc">See relavant posts from people and pages that you follow</div>
+              </div>
+            </div>
+            <div className="items">
+              <img src="/images/pages-clr.png" alt="events" />
+              <div className="text-content">
+                <div className="name">Pages</div>
+                <div className="desc">Discover and connect with business on facebook</div>
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+      </Social>
     </Container>
   );
 }
@@ -353,3 +403,5 @@ const Entertainment = styled(PersonalInformation)`
     margin-bottom: 10px;
   }
 `;
+
+const Social = styled(PersonalInformation)``;
