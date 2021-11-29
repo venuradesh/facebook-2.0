@@ -8,6 +8,7 @@ function FeedMiddle() {
     <Container>
       <PostSender />
       <Post />
+      <Post />
     </Container>
   );
 }
