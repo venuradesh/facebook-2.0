@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
@@ -45,7 +45,7 @@ function PostSender() {
         </div>
       </div>
       <div className="preview">
-        <img src="" alt="photo-preview" />
+        <img src="" alt="preview of the upload" />
       </div>
       <div className="items">
         <div className="live-item">

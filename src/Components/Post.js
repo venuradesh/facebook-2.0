@@ -6,7 +6,7 @@ function Post() {
     <Container>
       <HeaderSection>
         <div className="pr-container">
-          <img src="/images/profile.jpg" alt="profile-picture" />
+          <img src="/images/profile.jpg" alt="profile" />
           <div className="name-container">
             <div className="name">Venura Warnasooriya</div>
             <div className="details-container">
@@ -56,7 +56,7 @@ function Post() {
         <input type="text" id="comment-section" placeholder="Write a comment" />
         <div className="items">
           <img src="/images/smile.png" alt="feeling" />
-          <img src="/images/gallery.png" alt="photo" />
+          <img src="/images/gallery.png" alt="gallery" />
           <img src="/images/gif.png" alt="gif" />
           <img src="/images/sticker.png" alt="stickers" />
         </div>
