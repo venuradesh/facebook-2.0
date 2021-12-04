@@ -4,6 +4,7 @@ import FeedLeft from "./FeedLeft";
 import FeedMiddle from "./FeedMiddle";
 import Header from "./Header";
 import NavBar from "./NavBar";
+import FeedRght from "./FeedRght";
 
 const Home = () => {
   return (
@@ -16,6 +17,9 @@ const Home = () => {
         </div>
         <div className="feed-middle">
           <FeedMiddle />
+        </div>
+        <div className="feed-right">
+          <FeedRght />
         </div>
       </Feed>
     </Container>
@@ -34,18 +38,18 @@ const Container = styled.div`
 const Feed = styled.div`
   left: 60px;
   right: 60px;
+  top: 60px;
   position: relative;
   z-index: 0;
   display: flex;
 
   .feed-left {
-    top: 60px;
     position: relative;
   }
 
-  .feed-middle {
+  .feed-middle,
+  .feed-right {
     position: relative;
-    top: 60px;
     left: 400px;
   }
 `;

@@ -17,6 +17,10 @@
   --border-radius-l: 20px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 *,
 *::after,
 *::before {

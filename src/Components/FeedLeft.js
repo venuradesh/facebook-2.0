@@ -213,6 +213,8 @@ const Container = styled.div`
   height: calc(100vh - var(--header-height));
   overflow-y: overlay;
   position: fixed;
+  top: 60px;
+  left: 60px;
   padding: 15px;
 
   &::-webkit-scrollbar {
