@@ -30,9 +30,6 @@ function FeedRght() {
 
   const onNextClick = () => {
     const scrollableWidth = storyContainer.current.scrollWidth - storyContainer.current.getBoundingClientRect().width;
-    console.log(scrollNext);
-    console.log(scrollableWidth);
-
     if (scrollNext < scrollableWidth) {
       setScrollNext(scrollNext + 130);
     }
