@@ -7,6 +7,8 @@
   --blueish-gray: #f0f2f5;
   --green: #36a420;
   --white: #fff;
+  --green-hover: #00a218;
+  --facebook-blue-hover: #1368d6;
 
   --font-size-n: 1rem;
   --font-size-h: 1.2rem;
@@ -19,6 +21,11 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  color: var(--dark-blue);
 }
 
 *,
