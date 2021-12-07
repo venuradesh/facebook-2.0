@@ -1,5 +1,5 @@
-import { CollectionsOutlined } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
+import FriendReq from "./FriendReq";
 import styled from "styled-components";
 import Story from "./Story";
 
@@ -42,25 +42,30 @@ function FeedRght() {
   };
 
   return (
-    <Container>
-      <StoryContainer>
-        <div className="story-heading">Stories</div>
-        <div className="stories" ref={storyContainer}>
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
+    <>
+      <Container>
+        <div className="story-container">
+          <StoryContainer>
+            <div className="story-heading">Stories</div>
+            <div className="stories" ref={storyContainer}>
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+            </div>
+          </StoryContainer>
+          <NextButtonContainer className="active" id="next-btn" onClick={() => onNextClick()}>
+            <img src="/images/next.png" alt="next-button" />
+          </NextButtonContainer>
+          <PrevButtonContainer className="" id="prev-btn" onClick={() => onPrevClick()}>
+            <img src="/images/next.png" alt="prev-button" />
+          </PrevButtonContainer>
         </div>
-      </StoryContainer>
-      <NextButtonContainer className="active" id="next-btn" onClick={() => onNextClick()}>
-        <img src="/images/next.png" alt="next-button" />
-      </NextButtonContainer>
-      <PrevButtonContainer className="" id="prev-btn" onClick={() => onPrevClick()}>
-        <img src="/images/next.png" alt="prev-button" />
-      </PrevButtonContainer>
-    </Container>
+        <FriendReq />
+      </Container>
+    </>
   );
 }
 
@@ -71,6 +76,23 @@ const Container = styled.div`
   padding: 15px;
   width: 380px;
   max-height: calc(100vh - 60px);
+  overflow-y: overlay;
+
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--bluewish-gray);
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: var(--normal-gray);
+  }
+
+  .story-container {
+    position: relative;
+  }
 `;
 
 const StoryContainer = styled.div`
