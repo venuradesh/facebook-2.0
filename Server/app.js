@@ -16,4 +16,11 @@ const db = mysql.createConnection({
   database: "facebook",
 });
 
+app.get("/", (req, res) => {
+  db.query(`SELECT * FROM info`, (err, rows) => {
+    if (!err) res.send(rows);
+    else console.error(err);
+  });
+});
+
 app.listen(port, () => console.log(`connected to port ${port}`));
