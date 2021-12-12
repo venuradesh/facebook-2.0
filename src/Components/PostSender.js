@@ -1,18 +1,25 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloseIcon from "@mui/icons-material/Close";
+import { FourGMobiledataRounded } from "@mui/icons-material";
+
+const API_URL = "http://localhost:8080/";
 
 function PostSender() {
   const container = useRef(null);
   const UploadPhoto = useRef(null);
-  // const [previewPhotos, setPreviewPhoto] = useState([]);
+  let images = [];
+  const [photos, setPhotos] = useState(null);
+  const formData = new FormData();
 
   const onCloseClick = () => {
     container.current.classList.remove("active");
+    document.getElementById("send-section").classList.remove("active");
   };
 
   const onPhotoClick = () => {
@@ -21,25 +28,50 @@ function PostSender() {
 
   const onChangePhoto = (e) => {
     const files = e.target.files;
-    const path = UploadPhoto.current.value;
-    console.log(path);
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        console.log(files[i]);
-      }
+    for (let i = 0; i < files.length; i++) {
+      //file appending name should be the same as name of input
+      //<input type="file" name="photo" />
+      formData.append(`photo`, files[i], files[i].name);
     }
   };
 
   useEffect(() => {
     container.current.addEventListener("click", () => {
       container.current.classList.add("active");
+      document.getElementById("send-section").classList.add("active");
     });
   }, []);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const caption = document.getElementById("text").value;
+    formData.append("caption", caption);
+    axios
+      .post(API_URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    document.getElementById("text").value = "";
+  };
+
+  const onEnter = (e) => {
+    if (e.code === "Enter" && e.shiftKey === true) {
+      onSubmit(e);
+    }
+  };
 
   return (
     <Container ref={container}>
       <div className="text-area">
-        <textarea name="text" id="text" cols="30" rows="1" placeholder="What's on your mid, Venura?"></textarea>
+        <textarea name="text" id="text" cols="30" rows="1" placeholder="What's on your mid, Venura?" onKeyUp={(e) => onEnter(e)}></textarea>
         <div className="close" onClick={() => onCloseClick()}>
           <CloseIcon className="close-btn" />
         </div>
@@ -79,6 +111,17 @@ function PostSender() {
           <span>Create a Room</span>
         </div>
       </div>
+      <div className="post-section" id="send-section">
+        <div className="separator"></div>
+        <div className="send-btn">
+          <p>
+            Press <span>Shift + Enter</span> or
+          </p>
+          <button type="submit" onClick={(e) => onSubmit(e)}>
+            Post
+          </button>
+        </div>
+      </div>
     </Container>
   );
 }
@@ -113,7 +156,7 @@ const Container = styled.div`
         cursor: pointer;
         position: absolute;
         right: 0;
-        background-color: var(--normal-gray);
+        background-color: var(--light-gray);
         border-radius: 50%;
 
         .close-btn {
@@ -123,8 +166,8 @@ const Container = styled.div`
       }
 
       textarea {
-        height: 100px;
-        padding-top: 30px;
+        height: 150px;
+        margin-top: 40px;
       }
     }
 
@@ -291,6 +334,55 @@ const Container = styled.div`
       height: 40px;
       background-color: var(--light-gray);
       margin: 0 3px;
+    }
+  }
+
+  .post-section {
+    display: none;
+
+    &.active {
+      display: block;
+
+      .separator {
+        width: 100%;
+        height: 1px;
+        background-color: var(--light-gray);
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .send-btn {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        p {
+          font-size: var(--font-size-s);
+          color: var(--normal-gray);
+          font-weight: 100;
+          margin-right: 20px;
+
+          span {
+            font-weight: 500;
+          }
+        }
+
+        button {
+          width: 150px;
+          padding: 15px 15px;
+          border-radius: var(--border-radius-s);
+          border: none;
+          background-color: var(--facebook-blue);
+          font-size: var(--font-size-n);
+          font-weight: 600;
+          color: var(--white);
+          cursor: pointer;
+
+          &:hover {
+            background-color: var(--facebook-blue-hover);
+          }
+        }
+      }
     }
   }
 `;
