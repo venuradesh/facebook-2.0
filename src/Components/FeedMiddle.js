@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "./Post";
 import PostSender from "./PostSender";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/";
 
 function FeedMiddle() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(API_URL)
+      .then((res) => {
+        setPosts([...res.data, ...posts]);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <Container>
       <PostSender />
-      <Post />
-      <Post />
+      {posts.map((post) => {
+        <Post />;
+      })}
     </Container>
   );
 }
