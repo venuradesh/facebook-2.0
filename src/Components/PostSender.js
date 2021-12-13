@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
@@ -6,16 +6,17 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloseIcon from "@mui/icons-material/Close";
-import { FourGMobiledataRounded } from "@mui/icons-material";
+import { FourGMobiledataRounded, PhotoSizeSelectSmallOutlined } from "@mui/icons-material";
 
 const API_URL = "http://localhost:8080/";
 
 function PostSender() {
   const container = useRef(null);
   const UploadPhoto = useRef(null);
-  let images = [];
-  const [photos, setPhotos] = useState(null);
-  const formData = new FormData();
+  const previewContainer = useRef(null);
+  const [photos, setPhotos] = useState([]);
+  const [preview, setPreview] = useState([]);
+  let formData = new FormData();
 
   const onCloseClick = () => {
     container.current.classList.remove("active");
@@ -27,13 +28,21 @@ function PostSender() {
   };
 
   const onChangePhoto = (e) => {
-    const files = e.target.files;
-    for (let i = 0; i < files.length; i++) {
-      //file appending name should be the same as name of input
-      //<input type="file" name="photo" />
-      formData.append(`photo`, files[i], files[i].name);
-    }
+    setPreview([]);
+    setPhotos((prev) => [...prev, ...e.target.files]);
   };
+
+  useMemo(() => {
+    photos.map((photo) => {
+      formData.append("photo", photo.name);
+      let reader = new FileReader();
+      reader.readAsDataURL(photo);
+      reader.onload = () => {
+        setPreview((prev) => [...prev, reader.result]);
+        document.querySelector(".preview-container").classList.add("active");
+      };
+    });
+  }, [photos]);
 
   useEffect(() => {
     container.current.addEventListener("click", () => {
@@ -60,12 +69,23 @@ function PostSender() {
       });
 
     document.getElementById("text").value = "";
+    formData = new FormData();
+    setPhotos([]);
+    setPreview([]);
+    onPreviewClose();
+    onCloseClick();
   };
 
   const onEnter = (e) => {
     if (e.code === "Enter" && e.shiftKey === true) {
       onSubmit(e);
     }
+  };
+
+  const onPreviewClose = () => {
+    setPreview([]);
+    setPhotos([]);
+    document.querySelector(".preview-container").classList.remove("active");
   };
 
   return (
@@ -76,8 +96,21 @@ function PostSender() {
           <CloseIcon className="close-btn" />
         </div>
       </div>
-      <div className="preview">
-        <img src="" alt="preview of the upload" />
+      <div className="preview-container" ref={previewContainer}>
+        {preview.length !== 0 &&
+          preview.map((photo, index) =>
+            !(index > 9) ? (
+              <div className={`preview prev_img_${index}`}>
+                <img key={index} src={photo} alt="preview" />
+                <span>+{preview.length - 9}</span>
+              </div>
+            ) : (
+              ""
+            )
+          )}
+        <div className="remove-icon" onClick={() => onPreviewClose()}>
+          <img src="/images/wrong.png" alt="remove" />
+        </div>
       </div>
       <div className="items">
         <div className="live-item">
@@ -168,6 +201,80 @@ const Container = styled.div`
       textarea {
         height: 150px;
         margin-top: 40px;
+        background-color: transparent;
+      }
+    }
+
+    .preview-container {
+      &.active {
+        width: 100%;
+        height: max-content;
+        max-height: 300px;
+        background-color: var(--light-gray);
+        border-radius: var(--border-radius-s);
+        padding: 15px;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
+        row-gap: 10px;
+
+        .preview {
+          width: 100px;
+          height: 100px;
+          display: flex;
+
+          img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+          }
+
+          span {
+            display: none;
+          }
+
+          &.prev_img_9 {
+            background-color: var(--dark-blue);
+            position: relative;
+
+            img {
+              opacity: 0.3;
+            }
+
+            span {
+              display: block;
+              position: absolute;
+              color: var(--white);
+              font-size: 2rem;
+              font-weight: 700;
+              left: 50%;
+              top: 50%;
+              transform: translateX(-50%) translateY(-50%);
+            }
+          }
+        }
+
+        .remove-icon {
+          width: 25px;
+          height: 25px;
+          background-color: var(--normal-gray);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          top: -10px;
+          cursor: pointer;
+
+          img {
+            width: 10px;
+            height: 10px;
+          }
+        }
       }
     }
 
@@ -242,6 +349,10 @@ const Container = styled.div`
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
       }
     }
+  }
+
+  .preview-container {
+    display: none;
   }
 
   .items {
