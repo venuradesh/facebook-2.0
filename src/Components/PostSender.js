@@ -6,7 +6,6 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloseIcon from "@mui/icons-material/Close";
-import { FourGMobiledataRounded, PhotoSizeSelectSmallOutlined } from "@mui/icons-material";
 
 const API_URL = "http://localhost:8080/";
 
@@ -16,25 +15,26 @@ function PostSender() {
   const previewContainer = useRef(null);
   const [photos, setPhotos] = useState([]);
   const [preview, setPreview] = useState([]);
-  let formData = new FormData();
+  let formData;
 
   const onCloseClick = () => {
     container.current.classList.remove("active");
     document.getElementById("send-section").classList.remove("active");
+    setPhotos([]);
+    setPreview([]);
   };
 
   const onPhotoClick = () => {
     document.getElementById("photo-click").click();
   };
 
-  const onChangePhoto = (e) => {
+  const onChangePhoto = async (e) => {
     setPreview([]);
     setPhotos((prev) => [...prev, ...e.target.files]);
   };
 
   useMemo(() => {
     photos.map((photo) => {
-      formData.append("photo", photo.name);
       let reader = new FileReader();
       reader.readAsDataURL(photo);
       reader.onload = () => {
@@ -53,7 +53,11 @@ function PostSender() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    formData = new FormData();
     const caption = document.getElementById("text").value;
+    photos.map((photo) => {
+      formData.append(`photo`, photo, photo.name);
+    });
     formData.append("caption", caption);
     axios
       .post(API_URL, formData, {
@@ -62,16 +66,14 @@ function PostSender() {
         },
       })
       .then((res) => {
-        console.log(res);
+        formData = new FormData();
+        if (res.status !== 200) console.log("something happend with the server, Try Again");
       })
       .catch((err) => {
         console.error(err);
       });
 
     document.getElementById("text").value = "";
-    formData = new FormData();
-    setPhotos([]);
-    setPreview([]);
     onPreviewClose();
     onCloseClick();
   };
