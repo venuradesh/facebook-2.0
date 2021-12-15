@@ -4,26 +4,31 @@ import Post from "./Post";
 import PostSender from "./PostSender";
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/";
+const API_URL = "http://localhost:8080/posts";
 
 function FeedMiddle() {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
+  const getPosts = () => {
     axios
       .get(API_URL)
       .then((res) => {
-        setPosts([...res.data, ...posts]);
+        setPosts((prev) => [...res.data, ...prev]);
       })
       .catch((err) => console.error(err));
-  }, []);
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, [posts]);
 
   return (
     <Container>
       <PostSender />
-      {posts.map((post) => {
-        <Post />;
-      })}
+      {posts.length !== 0 &&
+        posts.map((post) => {
+          <Post post={post} />;
+        })}
     </Container>
   );
 }
