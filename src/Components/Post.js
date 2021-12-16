@@ -43,7 +43,7 @@ function Post({ posts }) {
           ))}
         </MediaSection>
       ) : (
-        ""
+        <div className="space"></div>
       )}
       <EngagementSection>
         <div className="btn-container">
@@ -92,6 +92,10 @@ const Container = styled.div`
   box-shadow: 0 3px 6px 0 var(--normal-gray);
   position: relative;
   margin-bottom: 15px;
+
+  .space {
+    margin-top: 15px;
+  }
 `;
 
 const HeaderSection = styled.div`

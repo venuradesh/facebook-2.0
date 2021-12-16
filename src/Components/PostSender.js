@@ -76,6 +76,7 @@ function PostSender() {
     document.getElementById("text").value = "";
     onPreviewClose();
     onCloseClick();
+    window.location.reload();
   };
 
   const onEnter = (e) => {
@@ -101,10 +102,10 @@ function PostSender() {
       <div className="preview-container" ref={previewContainer}>
         {preview.length !== 0 &&
           preview.map((photo, index) =>
-            !(index > 9) ? (
+            !(index > 10) ? (
               <div className={`preview prev_img_${index}`}>
                 <img key={index} src={photo} alt="preview" />
-                <span>+{preview.length - 9}</span>
+                <span>+{preview.length - 10}</span>
               </div>
             ) : (
               ""
