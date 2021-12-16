@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(fileUpload());
-app.use(express.static("Upload"));
+app.use("/", express.static("Upload"));
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -44,7 +44,7 @@ app.post("/", (req, res) => {
   } else {
     if (images) {
       extension = images.mimetype.split("/")[1];
-      uploadPath = __dirname + "\\Upload\\" + "facebook_" + Date.now() + `_1.${extension}`;
+      uploadPath = __dirname + "\\Upload\\" + "facebook_" + Date.now() + `_0.${extension}`;
       Name = "facebook_" + Date.now() + `_0.${extension}`;
       imageNameContainer.push(Name);
       images.mv(uploadPath, (err) => {
