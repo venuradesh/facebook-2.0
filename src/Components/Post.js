@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
-function Post() {
+function Post({ posts }) {
+  let images = posts.images ? posts.images.split(",") : [];
+  const caption = posts.caption ? posts.caption : "";
+  const [moreImages, setMoreImages] = useState(false);
+
+  useEffect(() => {
+    if (images.length > 4) {
+      setMoreImages(true);
+      images = images.slice(0, 4);
+    }
+  }, [posts]);
+
   return (
-    <Container>
+    <Container id={posts.id}>
       <HeaderSection>
         <div className="pr-container">
           <img src="/images/profile.jpg" alt="profile" />
@@ -21,13 +33,18 @@ function Post() {
           <img src="/images/list.png" alt="more-options" />
         </div>
       </HeaderSection>
-      <CaptionSection>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur voluptates vitae esse! Assumenda dolore exercitationem, tempore fugit maiores saepe illum?</CaptionSection>
-      <MediaSection>
-        <div className="media-container one" src="/images/media1.jpg"></div>
-        <div className="media-container two" src="/images/media2.jpg"></div>
-        <div className="media-container three" src="/images/media3.jpg"></div>
-        <div className="media-container four" src="/images/media4.jpg"></div>
-      </MediaSection>
+      <CaptionSection>{caption}</CaptionSection>
+      {images.length !== 0 ? (
+        <MediaSection className={`No_images_${!moreImages ? images.length : "4"} ${moreImages ? "more-images" : ""}`}>
+          {images.map((image, index) => (
+            <div key={index} className={`media-container image_${index + 1}`} src={`http://localhost:8080/${image}`}>
+              <span>+{images.length - 3}</span>
+            </div>
+          ))}
+        </MediaSection>
+      ) : (
+        ""
+      )}
       <EngagementSection>
         <div className="btn-container">
           <div className="like btn">
@@ -151,8 +168,65 @@ const MediaSection = styled.div`
   max-height: 500px;
   min-height: 400px;
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: 2fr 1fr;
+
+  &.No_images_1 {
+    min-height: 500px;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas: "img1";
+  }
+
+  &.No_images_2 {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "img1 img2";
+  }
+
+  &.No_images_3 {
+    grid-tempate-rows: repeat(2, 1fr);
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-areas:
+      "img1 img2"
+      "img1 img3";
+  }
+
+  &.No_images_4 {
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "img1 img2"
+      "img1 img3"
+      "img1 img4";
+  }
+
+  &.more-images {
+    .media-container {
+      &.image_4 {
+        position: relative;
+        display: grid;
+        place-items: center;
+
+        &::after {
+          content: "";
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          position: absolute;
+          background-color: var(--dark-blue);
+          opacity: 0.6;
+        }
+
+        span {
+          display: block;
+          font-size: 2.8rem;
+          font-weight: 700;
+          color: var(--white);
+          z-index: 1;
+        }
+      }
+    }
+  }
 
   .media-container {
     background-size: cover;
@@ -161,29 +235,33 @@ const MediaSection = styled.div`
     background-repeat: no-repeat;
   }
 
-  .one {
-    grid-row: 1/-1;
-    grid-column: 1;
-    display: flex;
-    background-image: url(${(props) => props.children[0].props.src});
-  }
+  .media-container {
+    span {
+      display: none;
+    }
 
-  .two {
-    grid-column: 2;
-    grid-row: 1;
-    background-image: url(${(props) => props.children[1].props.src});
-  }
+    &.image_1 {
+      grid-area: img1;
+      display: flex;
+      background-image: url(${(props) => props.children[0].props.src});
+      background-size: cover;
+      object-fit: cover;
+    }
 
-  .three {
-    grid-column: 2;
-    grid-row: 2;
-    background-image: url(${(props) => props.children[2].props.src});
-  }
+    &.image_2 {
+      grid-area: img2;
+      background-image: url(${(props) => (props.children[1] ? props.children[1].props.src : "")});
+    }
 
-  .four {
-    grid-column: 2;
-    grid-row: 3;
-    background-image: url(${(props) => props.children[3].props.src});
+    &.image_3 {
+      grid-area: img3;
+      background-image: url(${(props) => (props.children[2] ? props.children[2].props.src : "")});
+    }
+
+    &.image_4 {
+      grid-area: img4;
+      background-image: url(${(props) => (props.children[3] ? props.children[3].props.src : "")});
+    }
   }
 `;
 

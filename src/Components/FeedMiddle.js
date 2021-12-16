@@ -13,22 +13,19 @@ function FeedMiddle() {
     axios
       .get(API_URL)
       .then((res) => {
-        setPosts((prev) => [...res.data, ...prev]);
+        setPosts(res.data);
       })
       .catch((err) => console.error(err));
   };
 
   useEffect(() => {
     getPosts();
-  }, [posts]);
+  }, []);
 
   return (
     <Container>
       <PostSender />
-      {posts.length !== 0 &&
-        posts.map((post) => {
-          <Post post={post} />;
-        })}
+      {posts.length !== 0 && posts.map((post, index) => <Post key={index} posts={post} />)}
     </Container>
   );
 }
