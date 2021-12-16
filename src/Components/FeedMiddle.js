@@ -9,11 +9,33 @@ const API_URL = "http://localhost:8080/posts";
 function FeedMiddle() {
   const [posts, setPosts] = useState([]);
 
+  const sortById = (arr) => {
+    if (Array.isArray(arr)) {
+      //bubble sort technique
+      for (let i = 0; i < arr.length - 1; i++) {
+        let flag = false;
+        for (let j = 0; j < arr.length - 1; j++) {
+          if (arr[j].id < arr[j + 1].id) {
+            let temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+            flag = true;
+          }
+        }
+        if (flag === false) break;
+      }
+      return arr;
+    } else {
+      return arr;
+    }
+  };
+
   const getPosts = () => {
     axios
       .get(API_URL)
       .then((res) => {
-        setPosts(res.data);
+        let data = sortById(res.data);
+        setPosts(data);
       })
       .catch((err) => console.error(err));
   };
