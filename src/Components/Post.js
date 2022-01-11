@@ -4,8 +4,37 @@ import styled from "styled-components";
 
 function Post({ posts }) {
   let images = posts.images ? posts.images.split(",") : [];
+  const [liked, setLiked] = useState(posts.liked === 0 ? false : true);
+  const [commented, setCommented] = useState(posts.commented === 0 ? false : true);
+  const [shared, setShared] = useState(posts.shared === 0 ? false : true);
+  const [postLikes, setPostLikes] = useState(posts.likes);
+  const [postComments, setPostComments] = useState(posts.comments);
+  const [postShares, setPostShares] = useState(posts.shares);
   const caption = posts.caption ? posts.caption : "";
   const [moreImages, setMoreImages] = useState(false);
+
+  const onEngClick = (name) => {
+    switch (name) {
+      case "like":
+        console.log(liked);
+        if (!liked) {
+          setLiked(true);
+          setPostLikes((prev) => prev + 1);
+        }
+        break;
+      case "comment":
+        if (!commented) {
+          setCommented(true);
+          setPostComments((prev) => prev + 1);
+        }
+        break;
+      case "share":
+        if (!shared) {
+          setShared(true);
+          setPostShares((prev) => prev + 1);
+        }
+    }
+  };
 
   useEffect(() => {
     if (images.length > 4) {
@@ -47,26 +76,26 @@ function Post({ posts }) {
       )}
       <EngagementSection>
         <div className="btn-container">
-          <div className="like btn">
+          <div className="like btn" onClick={() => onEngClick("like")}>
             <img src="/images/like.png" alt="like btn" />
             <p>Like</p>
           </div>
-          <div className="comment btn">
+          <div className="comment btn" onClick={() => onEngClick("comment")}>
             <img src="/images/comment.png" alt="like btn" />
             <p>Comment</p>
           </div>
-          <div className="share btn">
+          <div className="share btn" onClick={() => onEngClick("share")}>
             <img src="/images/share.png" alt="like btn" />
             <p>Share</p>
           </div>
         </div>
         <div className="stat-container">
           <img src="/images/like-filled.png" alt="liked" />
-          <p>986</p>
+          <p>{postLikes}</p>
           <img src="/images/comment-filled.png" alt="comment" />
-          <p>200</p>
+          <p>{postComments}</p>
           <img src="/images/share-filled.png" alt="shares" />
-          <p>5</p>
+          <p>{postShares}</p>
         </div>
       </EngagementSection>
       <CommentSection>
