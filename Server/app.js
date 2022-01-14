@@ -24,6 +24,10 @@ app.get("/posts", (req, res) => {
   });
 });
 
+app.post("/like", (req, res) => {
+  console.log(req.body);
+});
+
 app.post("/", (req, res) => {
   let uploadPath, extension, Name, images, caption;
   req.files ? (images = req.files.photo) : null;

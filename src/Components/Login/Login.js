@@ -10,6 +10,10 @@ function Login() {
     document.getElementById("item-options").classList.add("active");
   };
 
+  const onCreateClick = () => {
+    document.location.href = "/create";
+  };
+
   return (
     <Container>
       <div className="background"></div>
@@ -32,7 +36,7 @@ function Login() {
           </button>
           <div className="forget-pwd">Forget Password?</div>
           <div className="seperator"></div>
-          <button className="btn create" id="create-btn ">
+          <button className="btn create" id="create-btn " onClick={() => onCreateClick()}>
             Create New Account
           </button>
           <div className="create-page">

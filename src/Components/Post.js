@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/like";
 
 function Post({ posts }) {
   let images = posts.images ? posts.images.split(",") : [];
@@ -12,7 +15,7 @@ function Post({ posts }) {
   const [postShares, setPostShares] = useState(posts.shares);
   const caption = posts.caption ? posts.caption : "";
   const [moreImages, setMoreImages] = useState(false);
-
+  console.log(posts);
   const onEngClick = (name) => {
     switch (name) {
       case "like":
@@ -20,19 +23,21 @@ function Post({ posts }) {
         if (!liked) {
           setLiked(true);
           setPostLikes((prev) => prev + 1);
+          axios.post(API_URL, {
+            id: posts.id,
+          });
+        } else {
+          setLiked(false);
+          setPostLikes((prev) => prev - 1);
         }
         break;
       case "comment":
-        if (!commented) {
-          setCommented(true);
-          setPostComments((prev) => prev + 1);
-        }
+        setCommented(true);
+        setPostComments((prev) => prev + 1);
         break;
       case "share":
-        if (!shared) {
-          setShared(true);
-          setPostShares((prev) => prev + 1);
-        }
+        setShared(true);
+        setPostShares((prev) => prev + 1);
     }
   };
 
