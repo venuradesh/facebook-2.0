@@ -1,9 +1,86 @@
 import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+const API_URL = "http://localhost:8080/create";
 
 const Create = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [date, setDate] = useState("");
+  const [gender, setGender] = useState("");
+  let formData;
+
   const onBackClick = () => {
     document.location.href = "/login";
+  };
+
+  const onSubmitClick = (e) => {
+    e.preventDefault();
+    const ifNotFilled = document.getElementById("if-not-filled");
+    if (firstName && lastName && mobileNumber && email && password && date && gender) {
+      formData = new FormData();
+      ifNotFilled.classList.remove("if-not-filled");
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("mobileNumber", mobileNumber);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("dob", date);
+      formData.append("gender", gender);
+
+      axios
+        .post(API_URL, formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if (res.statusText === "OK") {
+            document.location.reload();
+          }
+        });
+    } else {
+      ifNotFilled.classList.add("if-not-filled");
+    }
+  };
+
+  const onPhoneNumberChange = (e) => {
+    let phoneNumber = Number(e.target.value);
+    if (phoneNumber) {
+      document.getElementById("pnumber").classList.remove("wrong");
+      setMobileNumber(Number(e.target.value));
+    } else {
+      if (e.target.value === "0") {
+        document.getElementById("pnumber").classList.remove("wrong");
+      } else {
+        document.getElementById("pnumber").classList.add("wrong");
+      }
+    }
+  };
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const onShowPassword = () => {
+    const password = document.getElementById("password");
+    if (password.type === "password") {
+      password.type = "text";
+    } else {
+      password.type = "password";
+    }
+  };
+
+  const onDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const onGenderClick = (e) => {
+    setGender(e.target.value);
   };
 
   return (
@@ -19,27 +96,41 @@ const Create = () => {
         </div>
         <BoxContainer>
           <div className="name-container">
-            <input type="text" className="text-field" name="firstName" id="fname" placeholder="First Name" />
-            <input type="text" className="text-field" name="firstName" id="fname" placeholder="Last Name" />
+            <input type="text" className="text-field" name="firstName" id="fname" placeholder="First Name" onChange={() => setFirstName(document.getElementById("fname").value)} />
+            <input type="text" className="text-field" name="firstName" id="lname" placeholder="Last Name" onChange={() => setLastName(document.getElementById("lname").value)} />
           </div>
-          <input type="email" className="text-field" name="email" id="email" placeholder="Email" />
+          <input type="email" className="text-field" name="email" id="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
           <div className="mobile-password-container">
-            <input type="text" className="text-field" name="phone-number" id="pnumber" placeholder="Phone number" />
-            <input type="password" className="text-field" name="password" id="password" placeholder="New password" />
+            <div className="phone-number">
+              <input
+                type="text"
+                className="text-field"
+                name="phone-number"
+                id="pnumber"
+                placeholder="Phone number"
+                onChange={(e) => {
+                  onPhoneNumberChange(e);
+                }}
+              />
+            </div>
+            <div className="password">
+              <input type="password" className="text-field" name="password" id="password" placeholder="New password" onChange={(e) => onPasswordChange(e)} />
+              <img src="/images/eye.png" alt="show password" onClick={() => onShowPassword()} />
+            </div>
           </div>
           <DateGenderContainer>
             <div className="dob-container">
-              <label for="dob">Date of birth</label>
-              <input type="date" name="dob" id="dob" pattern="dd/mm/yyyy" />
+              <label htmlFor="dob">Date of birth</label>
+              <input type="date" name="dob" id="dob" pattern="dd/mm/yyyy" onChange={(e) => onDateChange(e)} />
             </div>
             <div className="gender-container">
               <label>Gender</label>
               <div className="radio-container">
-                <input type="radio" name="gender" id="male" />
+                <input type="radio" name="gender" id="male" value="male" onChange={(e) => onGenderClick(e)} />
                 <label htmlFor="gender">Male</label>
-                <input type="radio" name="gender" id="female" />
+                <input type="radio" name="gender" id="female" value="female" onChange={(e) => onGenderClick(e)} />
                 <label htmlFor="gender">Female</label>
-                <input type="radio" name="gender" id="other" />
+                <input type="radio" name="gender" id="other" value="other" onChange={(e) => onGenderClick(e)} />
                 <label htmlFor="gender">Other</label>
               </div>
             </div>
@@ -50,7 +141,10 @@ const Create = () => {
             </p>
           </div>
           <div className="btn-container">
-            <input type="submit" value="Sign Up" />
+            <input type="submit" value="Sign Up" onClick={(e) => onSubmitClick(e)} />
+            <p id="if-not-filled" className="">
+              *You've to fill all the fields
+            </p>
           </div>
         </BoxContainer>
       </SignUpContainer>
@@ -168,18 +262,52 @@ const BoxContainer = styled.div`
     align-items: center;
     justify-content: center;
     column-gap: 15px;
-
-    .text-field {
-    }
   }
 
   .mobile-password-container {
     display: flex;
     column-gap: 15px;
 
-    .text,
+    input[type="text"] {
+      transition: all 0.3s ease;
+
+      &.wrong {
+        background-color: var(--light-red);
+        color: var(--white);
+      }
+    }
+
+    .phone-number {
+      flex: 1;
+
+      input[type="text"] {
+        width: 100%;
+      }
+    }
+
     .password {
       flex: 1;
+      position: relative;
+
+      img {
+        width: 25px;
+        height: 25 px;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
+      input {
+        width: 100%;
+        padding-right: 40px;
+
+        &::-ms-reveal,
+        &::-ms-clear {
+          display: none;
+        }
+      }
     }
   }
 
@@ -210,6 +338,21 @@ const BoxContainer = styled.div`
   }
 
   .btn-container {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+
+    p {
+      display: none;
+
+      &.if-not-filled {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--light-red);
+        font-weight: 700;
+      }
+    }
+
     input[type="submit"] {
       padding: 15px 50px;
       border-radius: var(--border-radius-s);
@@ -249,8 +392,12 @@ const DateGenderContainer = styled.div`
       border-radius: var(--border-radius-s);
       margin-top: 8px;
       outline: none;
-      color: var(--normal-gray);
+      color: var(--dark-blue);
       font-size: 1rem;
+
+      &::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+      }
     }
   }
 
