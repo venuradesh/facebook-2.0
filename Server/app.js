@@ -2,6 +2,7 @@ const express = require("express");
 const fileUpload = require("express-fileUpload");
 const cors = require("cors");
 const mysql = require("mysql");
+const uniqId = require("uniqid");
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -26,6 +27,14 @@ app.get("/posts", (req, res) => {
 
 app.post("/like", (req, res) => {
   console.log(req.body);
+});
+
+app.post("/create", (req, res) => {
+  const details = req.body;
+  db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password) VALUES(?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, details.password], (err) => {
+    if (err) res.status(400).send(err);
+    else res.status(200).send("OK");
+  });
 });
 
 app.post("/", (req, res) => {
