@@ -3,6 +3,8 @@ const fileUpload = require("express-fileUpload");
 const cors = require("cors");
 const mysql = require("mysql");
 const uniqId = require("uniqid");
+const bcrypt = require("bcrypt");
+const saltNumber = 10;
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -31,9 +33,13 @@ app.post("/like", (req, res) => {
 
 app.post("/create", (req, res) => {
   const details = req.body;
-  db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password) VALUES(?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, details.password], (err) => {
+  bcrypt.hash(details.password, saltNumber, (err, hash) => {
     if (err) res.status(400).send(err);
-    else res.status(200).send("OK");
+    db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password) VALUES(?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, hash], (err) => {
+      if (err) {
+        res.send(err);
+      } else res.status(200).send("OK");
+    });
   });
 });
 
