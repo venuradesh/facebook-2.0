@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-function FeedLeft() {
+function FeedLeft({ user }) {
   const [persClick, setPerseClick] = useState(false);
   const [profClick, setProfClick] = useState(false);
   const [entClick, setEntClick] = useState(true);
@@ -36,12 +36,14 @@ function FeedLeft() {
   return (
     <Container>
       <ProfilePreview>
-        <div className="cover-container" src="/images/cover.jpg"></div>
-        <div className="dp-container" src="/images/profile.jpg"></div>
+        <div className="cover-container" src={user.cover ? `http://localhost:8080/${user.cover}` : "/images/cover-default.png"}></div>
+        <div className="dp-container" src={user.ProfilePic ? `http://localhost:8080/${user.ProfilePic}` : "/images/user.png"}></div>
         <div className="text-container">
-          <div className="title">Venura Warnasooriya</div>
-          <div className="headline">Web Developer | Software Developer | Graphic Designer</div>
-          <div className="location">lives in Gampola</div>
+          <div className="title">
+            {user.FirstName} {user.lastName}
+          </div>
+          <div className="headline">{user.bio ? user.bio : ""}</div>
+          <div className="location">{user.location ? user.location : ""}</div>
           <div className="last-update">Last update on 3rd january 2021</div>
         </div>
         <div className="edit-profile">Edit Profile</div>

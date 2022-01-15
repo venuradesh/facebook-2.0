@@ -11,12 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "body-parser": "^1.19.1",
-    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
-    "express-sessions": "^1.0.6",
     "mysql": "^2.18.1",
     "uniqid": "^5.4.0"
   },

@@ -64,6 +64,15 @@ app.post("/compare", (req, res) => {
   });
 });
 
+app.get("/user/:id", (req, res) => {
+  db.query("SELECT * FROM info WHERE id=?", req.params.id, (err, result) => {
+    if (err) res.send({ err: err });
+    else {
+      res.send({ user: result[0] });
+    }
+  });
+});
+
 app.post("/", (req, res) => {
   let uploadPath, extension, Name, images, caption;
   req.files ? (images = req.files.photo) : null;
