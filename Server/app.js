@@ -43,6 +43,27 @@ app.post("/create", (req, res) => {
   });
 });
 
+app.post("/compare", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  db.query("SELECT * FROM info WHERE email=?", email, (err, result) => {
+    if (err) res.send({ err });
+    else {
+      bcrypt.compare(password, result[0].password, (err, response) => {
+        if (err) console.log(err);
+        else {
+          if (response) {
+            res.status(200).send({ response, user: result[0] });
+          } else {
+            res.status(200).send({ response });
+          }
+        }
+      });
+    }
+  });
+});
+
 app.post("/", (req, res) => {
   let uploadPath, extension, Name, images, caption;
   req.files ? (images = req.files.photo) : null;

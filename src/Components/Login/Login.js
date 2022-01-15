@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
+import axios from "axios";
+const API_URL = "http://localhost:8080/compare";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const passwordField = useRef(null);
+
   const onCloseClick = () => {
     document.getElementById("item-options").classList.remove("active");
   };
@@ -12,6 +18,33 @@ function Login() {
 
   const onCreateClick = () => {
     document.location.href = "/create";
+  };
+
+  const showPassword = () => {
+    console.log(passwordField.current.type);
+    if (passwordField.current.type === "password") passwordField.current.type = "text";
+    else passwordField.current.type = "password";
+  };
+
+  const onLoginClick = () => {
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    axios
+      .post(API_URL, formData, {
+        headers: {
+          "content-type": "multitype/form-data",
+        },
+      })
+      .then((response) => {
+        if (response.data.response) {
+          document.getElementById("incorrectPassword").classList.remove("activated");
+          document.location.href = `/${response.data.user.id}`;
+        } else {
+          document.getElementById("incorrectPassword").classList.add("activated");
+        }
+      });
   };
 
   return (
@@ -29,9 +62,26 @@ function Login() {
           </div>
         </div>
         <div className="loginBox">
-          <input type="text" className="text input" placeholder="Email address or phone number" />
-          <input type="password" className="password input" placeholder="Password" />
-          <button className="btn login" id="login-btn " type="submit">
+          <input type="text" className="text input" placeholder="Email address or phone number" onChange={(e) => setEmail(e.target.value)} />
+          <div className="password-container">
+            <input
+              type="password"
+              className="password input"
+              placeholder="Password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  onLoginClick();
+                }
+              }}
+              ref={passwordField}
+            />
+            <img src="/images/eye.png" alt="show password" onClick={(e) => showPassword(e)} />
+          </div>
+          <span id="incorrectPassword">Username or password is incorrect</span>
+          <button className="btn login" id="login-btn " type="submit" onClick={() => onLoginClick()}>
             Log in
           </button>
           <div className="forget-pwd">Forget Password?</div>
@@ -222,7 +272,6 @@ const Container = styled.div`
 
     .loginBox {
       width: 400px;
-      height: 430px;
       background-color: var(--white);
       border-radius: var(--border-radius-s);
       box-shadow: 0 1px 9px 0 darkgray;
@@ -231,8 +280,29 @@ const Container = styled.div`
       display: flex;
       flex-direction: column;
 
+      .password-container{
+        width: 100%;
+        position:relative;
+
+        img{
+          width: 25px;
+          height: 25px;
+          position:absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-30%);
+          cursor:pointer;
+          opacity: 0.5;
+        }
+
+        input{
+          padding-right: 50px;
+        }
+      }
+
       .input {
         padding: 20px;
+        width: 100%;
         outline: none;
         border: none;
         background-color: var(--light-gray);
@@ -244,6 +314,11 @@ const Container = styled.div`
           color: var(--normal-gray);
           font-weight: 700;
           font-size: var(--font-size-n);
+        }
+
+        &::-ms-reveal,
+        &::-ms-clear{
+          display:none;
         }
       }
 
@@ -273,6 +348,19 @@ const Container = styled.div`
           &:hover{
             background-color: var(--green-hover)
           }
+        }
+      }
+
+      #incorrectPassword{
+        display:none;
+
+        &.activated{
+          display:block;
+          font-size: 0.7rem;
+          text-align:center;
+          color: var(--light-red);
+          font-weight: 700;
+          margin-top: 10px;
         }
       }
 
