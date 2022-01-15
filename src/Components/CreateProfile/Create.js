@@ -21,9 +21,11 @@ const Create = () => {
   const onSubmitClick = (e) => {
     e.preventDefault();
     const ifNotFilled = document.getElementById("if-not-filled");
+    const dupEmail = document.getElementById("dup-email");
     if (firstName && lastName && mobileNumber && email && password && date && gender) {
       formData = new FormData();
       ifNotFilled.classList.remove("if-not-filled");
+      dupEmail.classList.remove("dup-email");
       formData.append("firstName", firstName);
       formData.append("lastName", lastName);
       formData.append("mobileNumber", mobileNumber);
@@ -39,8 +41,11 @@ const Create = () => {
           },
         })
         .then((res) => {
-          if (res.statusText === "OK") {
+          if (res.data.code == "ER_DUP_ENTRY") {
+            dupEmail.classList.add("dup-email");
             document.location.reload();
+          } else {
+            console.log(res);
           }
         });
     } else {
@@ -144,6 +149,9 @@ const Create = () => {
             <input type="submit" value="Sign Up" onClick={(e) => onSubmitClick(e)} />
             <p id="if-not-filled" className="">
               *You've to fill all the fields
+            </p>
+            <p id="dup-email" className="">
+              *You've entered an already existing email
             </p>
           </div>
         </BoxContainer>
@@ -342,10 +350,21 @@ const BoxContainer = styled.div`
     align-items: center;
     column-gap: 20px;
 
-    p {
+    #if-not-filled {
       display: none;
 
       &.if-not-filled {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--light-red);
+        font-weight: 700;
+      }
+    }
+
+    #dup-email {
+      display: none;
+
+      &.dup-email {
         display: block;
         font-size: 0.8rem;
         color: var(--light-red);
