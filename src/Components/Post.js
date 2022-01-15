@@ -15,11 +15,9 @@ function Post({ posts }) {
   const [postShares, setPostShares] = useState(posts.shares);
   const caption = posts.caption ? posts.caption : "";
   const [moreImages, setMoreImages] = useState(false);
-  console.log(posts);
   const onEngClick = (name) => {
     switch (name) {
       case "like":
-        console.log(liked);
         if (!liked) {
           setLiked(true);
           setPostLikes((prev) => prev + 1);

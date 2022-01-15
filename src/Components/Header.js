@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-function Header() {
+function Header({ user }) {
   const itemContainer = [
     { name: "Home", status: "active", openThis: "" },
     { name: "Watch", status: "", openThis: "" },
@@ -28,7 +28,7 @@ function Header() {
         <div className="notification open">
           <img src="/images/notification.png" alt="notification" />
         </div>
-        <div className="profile-container" src="/images/profile.jpg"></div>
+        <div className="profile-container" src={user.ProfilePic ? `http://localhost:8080/${user.ProfilePic}` : "/images/user.png"}></div>
       </ProfileContainer>
     </Container>
   );
