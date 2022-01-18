@@ -44,12 +44,12 @@ function FeedMiddle() {
 
   useEffect(() => {
     getPosts();
-  }, []);
+  });
 
   return (
     <Container>
       <PostSender />
-      {posts.length == 0 ? (
+      {posts.length === 0 ? (
         <div className="loading-contaner">
           <div className="loader"></div>
           <div className="loader two"></div>
