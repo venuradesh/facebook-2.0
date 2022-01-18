@@ -41,7 +41,7 @@ const Create = () => {
           },
         })
         .then((res) => {
-          if (res.data.code == "ER_DUP_ENTRY") {
+          if (res.data.code === "ER_DUP_ENTRY") {
             dupEmail.classList.add("dup-email");
             document.location.reload();
           } else {

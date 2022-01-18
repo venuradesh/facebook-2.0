@@ -14,6 +14,7 @@ function Header({ user }) {
     <Container>
       <LogoContainer>
         <img src="/images/favicon.png" alt="Facebook Logo" />
+        <input type="text" name="search" id="searchBar" placeholder="Search anything..." />
       </LogoContainer>
       <ItemContainer>
         {itemContainer.map((item, index) => (
@@ -60,6 +61,22 @@ const LogoContainer = styled.div`
 
   img {
     width: 40px;
+  }
+
+  input {
+    position: absolute;
+    left: 60px;
+    padding: 15px;
+    width: 300px;
+    border-radius: var(--border-radius-l);
+    font-size: 1rem;
+    background-color: var(--light-gray);
+    border: none;
+    outline: none;
+
+    &::placeholder {
+      color: var(--normal-gray);
+    }
   }
 `;
 
@@ -157,6 +174,7 @@ const ProfileContainer = styled.div`
     background-image: url(${(props) => props.children[1].props.src});
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     object-fit: cover;
     border: 2px solid var(--white);
     cursor: pointer;

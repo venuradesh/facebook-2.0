@@ -19,7 +19,7 @@ const Home = () => {
         setUser(res.data.user);
       }, 1000);
     });
-  }, []);
+  });
 
   return (
     <Container>
