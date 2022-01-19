@@ -36,6 +36,10 @@ function Post({ posts }) {
       case "share":
         setShared(true);
         setPostShares((prev) => prev + 1);
+        console.log(commented, shared);
+        break;
+      default:
+        console.log("not valid");
     }
   };
 

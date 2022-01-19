@@ -47,6 +47,10 @@ function Login() {
       });
   };
 
+  const onAnchorClick = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <Container>
       <div className="background"></div>
@@ -100,47 +104,47 @@ function Login() {
       <Footer>
         <ul>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               English
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               සිංහල
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               தமிழ்
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               Español
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               Deutsch
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               Italiano
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               Français (France)
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               Português (Brasil)
             </a>
           </li>
           <li>
-            <a href="#" className="lang">
+            <a href="/lang" className="lang" onClick={(e) => onAnchorClick(e)}>
               日本語
             </a>
           </li>

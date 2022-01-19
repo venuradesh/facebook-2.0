@@ -82,9 +82,11 @@ app.put("/update", (req, res) => {
     coverPhotoName = "";
 
   if (files) {
+    let extension, pathName;
+
     if (files.profilePic) {
-      const extension = files.profilePic.mimetype.split("/")[1];
-      const pathName = __dirname + "\\Upload\\" + `facebook_${info.id}_dp.${extension}`;
+      extension = files.profilePic.mimetype.split("/")[1];
+      pathName = __dirname + "\\Upload\\" + `facebook_${info.id}_dp.${extension}`;
       ProfilePicName = "facebook_" + info.id + "_dp." + extension;
       files.profilePic.mv(pathName, (err) => {
         if (err) res.status(400).send(`error in uploading dp: ${err}`);
@@ -92,8 +94,8 @@ app.put("/update", (req, res) => {
     }
 
     if (files.coverPhoto) {
-      const extension = files.coverPhoto.mimetype.split("/")[1];
-      const pathName = __dirname + "\\Upload\\" + `facebook_${info.id}_cover.${extension}`;
+      extension = files.coverPhoto.mimetype.split("/")[1];
+      pathName = __dirname + "\\Upload\\" + `facebook_${info.id}_cover.${extension}`;
       coverPhotoName = `facebook_${info.id}_cover.${extension}`;
       files.coverPhoto.mv(pathName, (err) => {
         if (err) res.status(400), send(`error in uploading cover: ${err}`);
@@ -101,11 +103,7 @@ app.put("/update", (req, res) => {
     }
   }
 
-  const query = ` 
-    UPDATE info SET FirstName=${info.FirstName}, lastName=${info.lastName}, country=${info.country}, ProfilePic=${ProfilePicName}, cover=${coverPhotoName}, relationship=${info.relationship}, works_at=${info.works_at}, dob=${info.dob}, email=${info.email} WHERE id=${info.id}  
-  `;
-
-  db.query("UPDATE info SET FirstName=?, lastName=?, country=?, ProfilePic=?, cover=?, relationship=?, works_at=?, dob=?, email=?, modify_time=? WHERE id=?;", [info.FirstName, info.lastName, info.country, ProfilePicName, coverPhotoName, info.realtionship, info.works_at, info.dob, info.email, Date.now(), info.id], (err, result) => {
+  db.query(`UPDATE info SET FirstName=?, lastName=?, country=?,${ProfilePicName ? "ProfilePic=" + ProfilePicName + "," : ""} ${coverPhotoName ? "cover=" + coverPhotoName + "," : ""} relationship=?, works_at=?, dob=?, email=?, modify_time=? WHERE id=?;`, [info.FirstName, info.lastName, info.country, info.realtionship, info.works_at, info.dob, info.email, Date.now(), info.id], (err, result) => {
     if (err) res.send({ err: err });
     else res.status(200).send({ response: "done" });
   });
