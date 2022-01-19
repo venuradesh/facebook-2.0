@@ -86,8 +86,11 @@ function FeedLeft({ user }) {
     formData.append("country", country);
     formData.append("dob", dob);
     formData.append("relationship", relationship);
-    dpPhoto ? formData.append("profilePic", dpPhoto, dpPhoto.name) : formData.append("profilePic", dpPhoto);
-    coverPhoto ? formData.append("coverPhoto", coverPhoto, coverPhoto.name) : formData.append("coverPhoto", coverPhoto);
+
+    dpPhoto ? formData.append("profilePic", dpPhoto, dpPhoto.name) : formData.append("profilePic", user.ProfilePic);
+    coverPhoto ? formData.append("coverPhoto", coverPhoto, coverPhoto.name) : formData.append("coverPhoto", user.cover);
+
+    console.log(dpPhoto ? console.log("within") : console.log("not within"));
 
     axios
       .put("http://localhost:8080/update", formData, {
@@ -179,7 +182,7 @@ function FeedLeft({ user }) {
             </div>
             <div className="headline">{user.bio ? user.bio : ""}</div>
             <div className="location">{user.location ? user.location : ""}</div>
-            <div className="last-update">Last update on 3rd january 2021</div>
+            <div className="last-update">Last update </div>
           </div>
           <div className="edit-profile" onClick={() => onEditProfileClick()}>
             Edit Profile

@@ -104,7 +104,6 @@ app.put("/update", (req, res) => {
   const query = ` 
     UPDATE info SET FirstName=${info.FirstName}, lastName=${info.lastName}, country=${info.country}, ProfilePic=${ProfilePicName}, cover=${coverPhotoName}, relationship=${info.relationship}, works_at=${info.works_at}, dob=${info.dob}, email=${info.email} WHERE id=${info.id}  
   `;
-
   db.query("UPDATE info SET FirstName=?, lastName=?, country=?, ProfilePic=?, cover=?, relationship=?, works_at=?, dob=?, email=?, modify_time=? WHERE id=?;", [info.FirstName, info.lastName, info.country, ProfilePicName, coverPhotoName, info.realtionship, info.works_at, info.dob, info.email, Date.now(), info.id], (err, result) => {
     if (err) res.send({ err: err });
     else res.status(200).send({ response: "done" });

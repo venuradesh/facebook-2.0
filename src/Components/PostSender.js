@@ -34,7 +34,7 @@ function PostSender() {
   };
 
   useMemo(() => {
-    photos.map((photo) => {
+    photos.forEach((photo) => {
       let reader = new FileReader();
       reader.readAsDataURL(photo);
       reader.onload = () => {
@@ -55,7 +55,7 @@ function PostSender() {
     e.preventDefault();
     formData = new FormData();
     const caption = document.getElementById("text").value;
-    photos.map((photo) => {
+    photos.forEach((photo) => {
       formData.append(`photo`, photo, photo.name);
     });
     formData.append("caption", caption);
