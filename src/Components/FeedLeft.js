@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRef } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
@@ -40,6 +40,11 @@ function FeedLeft({ user }) {
     }
   };
 
+  useEffect(() => {
+    console.log(user.profilePic);
+    console.log(user.cover);
+  });
+
   const onEntClick = () => {
     document.querySelector(".ent-next").classList.toggle("active");
     if (!entClick) {
@@ -76,6 +81,7 @@ function FeedLeft({ user }) {
   };
 
   const onUpdateClick = (e) => {
+    console.log(dpPhoto ? console.log(user.cover) : console.log(user.ProfilePic));
     e.preventDefault();
     formData.append("id", userId.id);
     formData.append("FirstName", firstName);
@@ -90,8 +96,6 @@ function FeedLeft({ user }) {
     dpPhoto ? formData.append("profilePic", dpPhoto, dpPhoto.name) : formData.append("profilePic", user.ProfilePic);
     coverPhoto ? formData.append("coverPhoto", coverPhoto, coverPhoto.name) : formData.append("coverPhoto", user.cover);
 
-    console.log(dpPhoto ? console.log("within") : console.log("not within"));
-
     axios
       .put("http://localhost:8080/update", formData, {
         headers: {
@@ -101,7 +105,7 @@ function FeedLeft({ user }) {
       .then((response) => {
         formData = new FormData();
         onEditProfileClick();
-        document.location.reload();
+        // document.location.reload();
       });
   };
 

@@ -13,13 +13,12 @@ import { useState } from "react";
 const Home = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     axios.get(`http://localhost:8080/user/${id}`).then((res) => {
-      setTimeout(() => {
-        setUser(res.data.user);
-      }, 1000);
+      setUser(res.data.user);
     });
-  });
+  }, []);
 
   return (
     <Container>
