@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 function FeedLeft({ user }) {
   const [persClick, setPerseClick] = useState(false);
@@ -39,11 +40,6 @@ function FeedLeft({ user }) {
       document.querySelector(`.${item}-heading`).style.marginBottom = "0px";
     }
   };
-
-  useEffect(() => {
-    console.log(user.profilePic);
-    console.log(user.cover);
-  });
 
   const onEntClick = () => {
     document.querySelector(".ent-next").classList.toggle("active");
@@ -93,6 +89,8 @@ function FeedLeft({ user }) {
     formData.append("dob", dob);
     formData.append("relationship", relationship);
 
+    console.log(dpPhoto ? "within" : "not-within");
+
     dpPhoto ? formData.append("profilePic", dpPhoto, dpPhoto.name) : formData.append("profilePic", user.ProfilePic);
     coverPhoto ? formData.append("coverPhoto", coverPhoto, coverPhoto.name) : formData.append("coverPhoto", user.cover);
 
@@ -105,7 +103,7 @@ function FeedLeft({ user }) {
       .then((response) => {
         formData = new FormData();
         onEditProfileClick();
-        // document.location.reload();
+        document.location.reload();
       });
   };
 
@@ -148,14 +146,14 @@ function FeedLeft({ user }) {
             <input type="text" name="lastName" id="lastName" placeholder={user.lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
           <div className="bio-container">
-            <input type="text" name="bio" id="bio" placeholder="Simply describe you" onChange={(e) => setBio(e.target.value)} />
+            <input type="text" name="bio" id="bio" placeholder={user.bio ? user.bio : "Simply describe you"} onChange={(e) => setBio(e.target.value)} />
           </div>
           <div className="works-at">
-            <input type="text" name="works at" id="works-at" placeholder="Works at ..." onChange={(e) => setJob(e.target.value)} />
+            <input type="text" name="works at" id="works-at" placeholder={user.works_at ? user.works_at : `Works at ...`} onChange={(e) => setJob(e.target.value)} />
             <input type="date" name="dob" id="dob" pattern="dd/mm/yyyy" value={dob} onChange={(e) => setDob(e.target.value)} />
           </div>
           <div className="country-relationship-container">
-            <input type="text" name="country" id="country" placeholder="Enter Your Country" onChange={(e) => setCountry(e.target.value)} />
+            <input type="text" name="country" id="country" placeholder={user.country ? user.country : `Enter Your Country`} onChange={(e) => setCountry(e.target.value)} />
             <select name="relationships" default="single" onChange={(e) => setRelationship(e.target.value)}>
               <option value="single" id="single">
                 Single
@@ -186,7 +184,7 @@ function FeedLeft({ user }) {
             </div>
             <div className="headline">{user.bio ? user.bio : ""}</div>
             <div className="location">{user.location ? user.location : ""}</div>
-            <div className="last-update">Last update </div>
+            <div className="last-update">Last update {moment(parseInt(user.modify_time)).format()}</div>
           </div>
           <div className="edit-profile" onClick={() => onEditProfileClick()}>
             Edit Profile

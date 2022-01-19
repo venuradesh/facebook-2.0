@@ -35,9 +35,7 @@ function FeedMiddle() {
       .get(API_URL)
       .then((res) => {
         let data = sortById(res.data);
-        window.setTimeout(() => {
-          setPosts(data);
-        }, 1000);
+        setPosts(data);
       })
       .catch((err) => console.error(err));
   };
