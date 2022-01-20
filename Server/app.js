@@ -27,7 +27,16 @@ app.get("/posts", (req, res) => {
   });
 });
 
-app.post("/like", (req, res) => {});
+app.post("/like", (req, res) => {
+  const likes = req.body.likes;
+  const postId = req.body.id;
+  const likedUsers = [...req.body.likedUsers];
+
+  db.query(`UPDATE posts SET likes=?, liked=JSON_SET(liked, '$.user', JSON_ARRAY(?)) WHERE id=?;`, [likes, likedUsers, postId], (err, result) => {
+    if (err) res.send({ err: err });
+    else res.status(200).send({ response: result });
+  });
+});
 
 app.post("/create", (req, res) => {
   const details = req.body;

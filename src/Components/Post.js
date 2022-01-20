@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-const API_URL = "http://localhost:8080/like";
+import { useParams } from "react-router-dom";
 
 function Post({ posts }) {
   let images = posts.images ? posts.images.split(",") : [];
-  const [liked, setLiked] = useState(posts.liked === 0 ? false : true);
+  const userId = useParams().id;
+  const likedUsers = JSON.parse(posts.liked);
+  const [liked, setLiked] = useState(likedUsers.user.length !== 0 && likedUsers.user.includes(userId) ? true : false);
   const [commented, setCommented] = useState(posts.commented === 0 ? false : true);
   const [shared, setShared] = useState(posts.shared === 0 ? false : true);
   const [postLikes, setPostLikes] = useState(posts.likes);
@@ -18,15 +20,18 @@ function Post({ posts }) {
   const onEngClick = (name) => {
     switch (name) {
       case "like":
+        console.log("liked: ", liked, "post liked: ", JSON.parse(posts.liked));
         if (!liked) {
           setLiked(true);
-          setPostLikes((prev) => prev + 1);
-          axios.post(API_URL, {
-            id: posts.id,
-          });
+          setPostLikes(postLikes + 1);
+          likedUsers.user = likedUsers.user.filter((user) => user != userId);
+          likedUsers.user.push(userId);
+          onLikeClick(likedUsers.user, postLikes + 1);
         } else {
           setLiked(false);
-          setPostLikes((prev) => prev - 1);
+          likedUsers.user = likedUsers.user.filter((user) => user != userId);
+          onLikeClick(likedUsers.user, postLikes - 1);
+          setPostLikes(postLikes - 1);
         }
         break;
       case "comment":
@@ -41,6 +46,20 @@ function Post({ posts }) {
       default:
         console.log("not valid");
     }
+  };
+
+  const onLikeClick = (likedUsers, likes) => {
+    axios
+      .post("http://localhost:8080/like", {
+        id: posts.id,
+        likedUsers,
+        userId,
+        likes,
+      })
+      .then((res) => {
+        setPostLikes(res.data.likes);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
