@@ -6,6 +6,7 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloseIcon from "@mui/icons-material/Close";
+import { useParams } from "react-router-dom";
 
 const API_URL = "http://localhost:8080/";
 
@@ -16,6 +17,7 @@ function PostSender() {
   const [photos, setPhotos] = useState([]);
   const [preview, setPreview] = useState([]);
   let formData;
+  const userId = useParams().id;
 
   const onCloseClick = () => {
     container.current.classList.remove("active");
@@ -55,6 +57,7 @@ function PostSender() {
     e.preventDefault();
     formData = new FormData();
     const caption = document.getElementById("text").value;
+    formData.append("userId", userId);
     photos.forEach((photo) => {
       formData.append(`photo`, photo, photo.name);
     });
@@ -76,7 +79,7 @@ function PostSender() {
     document.getElementById("text").value = "";
     onPreviewClose();
     onCloseClick();
-    window.location.reload();
+    document.location.reload();
   };
 
   const onEnter = (e) => {

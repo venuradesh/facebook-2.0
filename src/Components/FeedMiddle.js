@@ -8,6 +8,7 @@ const API_URL = "http://localhost:8080/posts";
 
 function FeedMiddle() {
   const [posts, setPosts] = useState([]);
+  const [noPosts, setNoPosts] = useState(false);
 
   const sortById = (arr) => {
     if (Array.isArray(arr)) {
@@ -34,8 +35,12 @@ function FeedMiddle() {
     axios
       .get(API_URL)
       .then((res) => {
-        let data = sortById(res.data);
-        setPosts(data);
+        if (res.data.length !== 0) {
+          let data = sortById(res.data);
+          setPosts(data);
+        } else {
+          setNoPosts(true);
+        }
       })
       .catch((err) => console.error(err));
   };
@@ -47,7 +52,14 @@ function FeedMiddle() {
   return (
     <Container>
       <PostSender />
-      {posts.length === 0 ? (
+      {noPosts ? (
+        <div className="no-posts">
+          <p>No posts available</p>
+        </div>
+      ) : (
+        ""
+      )}
+      {!noPosts && posts.length === 0 ? (
         <div className="loading-contaner">
           <div className="loader"></div>
           <div className="loader two"></div>
@@ -67,6 +79,32 @@ const Container = styled.div`
   width: calc(100vw - 60px - 800px);
   max-height: 100vh;
   height: calc(100vh - 60px);
+  position: relative;
+
+  .no-posts {
+    width: 400px;
+    height: 200px;
+    background-color: var(--white);
+    position: relative;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    border-radius: var(--border-radius-s);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px 1px var(--normal-gray);
+
+    p {
+      font-size: 1.4rem;
+      font-weight: 700;
+      opacity: 0.4;
+
+      &::selection {
+        background-color: transparent;
+      }
+    }
+  }
 
   .loading-contaner {
     width: 100%;

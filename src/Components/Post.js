@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
 const API_URL = "http://localhost:8080/like";
 
 function Post({ posts }) {
@@ -15,6 +14,7 @@ function Post({ posts }) {
   const [postShares, setPostShares] = useState(posts.shares);
   const caption = posts.caption ? posts.caption : "";
   const [moreImages, setMoreImages] = useState(false);
+  const [comment, setComment] = useState();
   const onEngClick = (name) => {
     switch (name) {
       case "like":
@@ -30,13 +30,13 @@ function Post({ posts }) {
         }
         break;
       case "comment":
-        setCommented(true);
-        setPostComments((prev) => prev + 1);
+        document.getElementById("comment-section").focus();
+        // setCommented(true);
+        // setPostComments((prev) => prev + 1);
         break;
       case "share":
         setShared(true);
         setPostShares((prev) => prev + 1);
-        console.log(commented, shared);
         break;
       default:
         console.log("not valid");
@@ -106,7 +106,7 @@ function Post({ posts }) {
         </div>
       </EngagementSection>
       <CommentSection>
-        <input type="text" id="comment-section" placeholder="Write a comment" />
+        <input type="text" id="comment-section" placeholder="Write a comment" onChange={(e) => setComment(e.target.value)} />
         <div className="items">
           <img src="/images/smile.png" alt="feeling" />
           <img src="/images/gallery.png" alt="gallery" />

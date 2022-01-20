@@ -4,7 +4,6 @@ const cors = require("cors");
 const mysql = require("mysql");
 const uniqId = require("uniqid");
 const bcrypt = require("bcrypt");
-const { InfoOutlined, ConstructionOutlined } = require("@mui/icons-material");
 const saltNumber = 10;
 const port = process.env.PORT || 8080;
 
@@ -28,15 +27,13 @@ app.get("/posts", (req, res) => {
   });
 });
 
-app.post("/like", (req, res) => {
-  console.log(req.body);
-});
+app.post("/like", (req, res) => {});
 
 app.post("/create", (req, res) => {
   const details = req.body;
   bcrypt.hash(details.password, saltNumber, (err, hash) => {
     if (err) res.status(400).send(err);
-    db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password) VALUES(?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, hash], (err) => {
+    db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password, modify_time) VALUES(?,?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, hash, Date.now()], (err) => {
       if (err) {
         res.send(err);
       } else res.status(200).send("OK");
@@ -102,8 +99,7 @@ app.put("/update", (req, res) => {
       });
     }
   }
-
-  db.query(`UPDATE info SET FirstName=?, lastName=?, country=?,${ProfilePicName ? "ProfilePic=" + ProfilePicName + "," : ""} ${coverPhotoName ? "cover=" + coverPhotoName + "," : ""} relationship=?, works_at=?, dob=?, email=?, modify_time=? WHERE id=?;`, [info.FirstName, info.lastName, info.country, info.realtionship, info.works_at, info.dob, info.email, Date.now(), info.id], (err, result) => {
+  db.query(`UPDATE info SET FirstName=?, lastName=?, country=?, ${ProfilePicName ? "ProfilePic=" + "'" + ProfilePicName + "'," : ""} ${coverPhotoName ? "cover=" + "'" + coverPhotoName + "'," : ""} relationship=?, works_at=?, dob=?, bio=? ,email=?, modify_time=? WHERE id=?;`, [info.FirstName, info.lastName, info.country, info.relationship, info.works_at, info.dob, info.bio, info.email, Date.now(), info.id], (err, result) => {
     if (err) res.send({ err: err });
     else res.status(200).send({ response: "done" });
   });
@@ -111,6 +107,7 @@ app.put("/update", (req, res) => {
 
 app.post("/", (req, res) => {
   let uploadPath, extension, Name, images, caption;
+  const userId = req.body.userId;
   req.files ? (images = req.files.photo) : null;
   let imageNameContainer = [];
   req.body.caption ? (caption = req.body.caption) : "";
@@ -140,7 +137,7 @@ app.post("/", (req, res) => {
   if (imageNameContainer.length !== 0) {
     imagesAvailable = true;
   }
-  db.query("INSERT INTO posts(caption, images) VALUES (?,?)", [caption, imagesAvailable ? imageNameContainer.toString() : ""], (err, rows) => {
+  db.query("INSERT INTO posts(caption, images, liked, commented, shared, userID, modify_time) VALUES (?,?,?,?,?,?, ?)", [caption, imagesAvailable ? imageNameContainer.toString() : "", '{"user": []}', '{"user": []}', '{"user":[]}', userId, Date.now()], (err, rows) => {
     imageNameContainer = [];
     if (!err) {
       imageNameContainer = [];
