@@ -184,7 +184,7 @@ function FeedLeft({ user }) {
             </div>
             <div className="headline">{user.bio ? user.bio : ""}</div>
             <div className="location">{user.location ? user.location : ""}</div>
-            <div className="last-update">Last update {moment(parseInt(user.modify_time)).format()}</div>
+            <div className="last-update">Last update {moment(parseInt(user.modify_time)).from()}</div>
           </div>
           <div className="edit-profile" onClick={() => onEditProfileClick()}>
             Edit Profile
