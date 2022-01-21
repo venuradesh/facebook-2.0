@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 function Header({ user }) {
+  const navigate = useNavigate();
+  const profileContainer = useRef(null);
+
   const itemContainer = [
     { name: "Home", status: "active", openThis: "" },
     { name: "Watch", status: "", openThis: "" },
@@ -29,7 +33,24 @@ function Header({ user }) {
         <div className="notification open">
           <img src="/images/notification.png" alt="notification" />
         </div>
-        <div className="profile-container" src={user.ProfilePic ? `http://localhost:8080/${user.ProfilePic}` : "/images/user.png"}></div>
+        <div
+          className="profile-container"
+          src={user.ProfilePic ? `http://localhost:8080/${user.ProfilePic}` : "/images/user.png"}
+          onClick={() => {
+            profileContainer.current.classList.toggle("activated");
+          }}
+        ></div>
+
+        <div className="logout-container" ref={profileContainer}>
+          <div
+            className="logout"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            log out
+          </div>
+        </div>
       </ProfileContainer>
     </Container>
   );
@@ -182,6 +203,42 @@ const ProfileContainer = styled.div`
 
     &:hover {
       border: 2px solid var(--facebook-blue);
+    }
+  }
+
+  .logout-container {
+    display: none;
+
+    &.activated {
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      width: 200px;
+      background-color: var(--white);
+      top: 60px;
+      box-shadow: 0 2px 3px 1px var(--normal-gray);
+
+      .logout {
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 15px;
+        cursor: pointer;
+        width: 200px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: var(--light-gray);
+        }
+
+        &::selection {
+          background-color: transparent;
+        }
+      }
     }
   }
 `;

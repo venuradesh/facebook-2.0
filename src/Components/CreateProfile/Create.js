@@ -2,9 +2,13 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import uniqid from "uniqid";
+import { useNavigate } from "react-router-dom";
 const API_URL = "http://localhost:8080/create";
 
 const Create = () => {
+  const navigate = useNavigate();
+  const userId = uniqid();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -12,10 +16,11 @@ const Create = () => {
   const [password, setPassword] = useState("");
   const [date, setDate] = useState("");
   const [gender, setGender] = useState("");
+
   let formData;
 
   const onBackClick = () => {
-    document.location.href = "/login";
+    document.location.href = `/login`;
   };
 
   const onSubmitClick = (e) => {
@@ -26,6 +31,7 @@ const Create = () => {
       formData = new FormData();
       ifNotFilled.classList.remove("if-not-filled");
       dupEmail.classList.remove("dup-email");
+      formData.append("id", userId);
       formData.append("firstName", firstName);
       formData.append("lastName", lastName);
       formData.append("mobileNumber", mobileNumber);
@@ -43,9 +49,8 @@ const Create = () => {
         .then((res) => {
           if (res.data.code === "ER_DUP_ENTRY") {
             dupEmail.classList.add("dup-email");
-            document.location.reload();
           } else {
-            console.log(res);
+            navigate(`/${userId}`);
           }
         });
     } else {

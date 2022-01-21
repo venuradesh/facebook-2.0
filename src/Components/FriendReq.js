@@ -7,8 +7,8 @@ function FriendReq() {
     <Container>
       <div className="heading">Requests</div>
       <div className="req-container">
-        <ReqTile profilePic="/images/profile.jpg" name="Sanduli Perera" bio="Farm Manager and orgnanizer " />
-        <ReqTile profilePic="/images/profile.jpg" name="Sanduli Perera" bio="Farm Manager and orgnanizer " />
+        <ReqTile profilePic="/images/user.png" name="Emma Watson" bio="Actress | Social speaker" />
+        <ReqTile profilePic="/images/user.png" name="Kumar Sangakkara" bio="Cricketer" />
       </div>
     </Container>
   );

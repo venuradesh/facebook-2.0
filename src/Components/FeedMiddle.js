@@ -6,7 +6,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/posts";
 
-function FeedMiddle() {
+function FeedMiddle({ user }) {
   const [posts, setPosts] = useState([]);
   const [noPosts, setNoPosts] = useState(false);
 
@@ -51,7 +51,7 @@ function FeedMiddle() {
 
   return (
     <Container>
-      <PostSender />
+      <PostSender userName={user.FirstName} />
       {noPosts ? (
         <div className="no-posts">
           <p>No posts available</p>

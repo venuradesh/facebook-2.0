@@ -18,7 +18,7 @@ const Home = () => {
     axios.get(`http://localhost:8080/user/${id}`).then((res) => {
       setUser(res.data.user);
     });
-  }, []);
+  });
 
   return (
     <Container>
@@ -37,10 +37,10 @@ const Home = () => {
               <FeedLeft user={user} />
             </div>
             <div className="feed-middle">
-              <FeedMiddle />
+              <FeedMiddle user={user} />
             </div>
             <div className="feed-right">
-              <FeedRght />
+              <FeedRght user={user} />
             </div>
           </Feed>
         </>

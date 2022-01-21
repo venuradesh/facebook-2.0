@@ -27,6 +27,7 @@ app.get("/posts", (req, res) => {
   });
 });
 
+//handling the likes to a post
 app.post("/like", (req, res) => {
   const likes = req.body.likes;
   const postId = req.body.id;
@@ -34,7 +35,19 @@ app.post("/like", (req, res) => {
 
   db.query(`UPDATE posts SET likes=?, liked=JSON_SET(liked, '$.user', JSON_ARRAY(?)) WHERE id=?;`, [likes, likedUsers, postId], (err, result) => {
     if (err) res.send({ err: err });
-    else res.status(200).send({ response: result });
+    else res.status(200).send({ response: result, likes: likes });
+  });
+});
+
+//handling the comments to a post
+app.post("/comment", (req, res) => {
+  const postId = req.body.id;
+  const commentedUsers = [...req.body.commentedUsers];
+  const commentCount = req.body.commentCount;
+
+  db.query(`UPDATE posts SET comments=?, commented=JSON_SET(commented, '$.user', JSON_ARRAY(${commentedUsers.map((user) => "JSON_ARRAY('" + user + "')")})) WHERE id=?;`, [commentCount, postId], (err, result) => {
+    if (err) res.status(400).send({ err: err });
+    else res.status(200).send({ response: result, commentCount });
   });
 });
 
@@ -42,7 +55,7 @@ app.post("/create", (req, res) => {
   const details = req.body;
   bcrypt.hash(details.password, saltNumber, (err, hash) => {
     if (err) res.status(400).send(err);
-    db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password, modify_time) VALUES(?,?,?,?,?,?,?,?,?);", [uniqId(), details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, hash, Date.now()], (err) => {
+    db.query("INSERT INTO info( id,FirstName, lastName, mobile_no, gender, email, dob, password, modify_time) VALUES(?,?,?,?,?,?,?,?,?);", [details.id, details.firstName, details.lastName, details.mobileNumber, details.gender, details.email, details.dob, hash, Date.now()], (err) => {
       if (err) {
         res.send(err);
       } else res.status(200).send("OK");
