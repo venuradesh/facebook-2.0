@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 
 const API_URL = "http://localhost:8080/";
 
-function PostSender() {
+function PostSender({ userName }) {
   const container = useRef(null);
   const UploadPhoto = useRef(null);
   const previewContainer = useRef(null);
@@ -97,7 +97,7 @@ function PostSender() {
   return (
     <Container ref={container}>
       <div className="text-area">
-        <textarea name="text" id="text" cols="30" rows="1" placeholder="What's on your mid, Venura?" onKeyUp={(e) => onEnter(e)}></textarea>
+        <textarea name="text" id="text" cols="30" rows="1" placeholder={`What's on your mind, ${userName}?`} onKeyUp={(e) => onEnter(e)}></textarea>
         <div className="close" onClick={() => onCloseClick()}>
           <CloseIcon className="close-btn" />
         </div>

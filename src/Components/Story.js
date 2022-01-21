@@ -5,7 +5,7 @@ function Story() {
   return (
     <Container src="/images/media1.jpg">
       <div className="overlay"></div>
-      <div className="profile-container open" src="images/profile.jpg"></div>
+      <div className="profile-container open" src="images/user.png"></div>
       <div className="down-part"></div>
     </Container>
   );
